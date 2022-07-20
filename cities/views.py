@@ -1,11 +1,11 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from django.views.generic.detail import DetailView
 from cities.forms import HtmlForm, CityForm
 from cities.models import City
-from django.views.generic import CreateView, UpdateView
+from django.views.generic import CreateView, UpdateView, DeleteView
 from django.urls import reverse_lazy
 
-__all__ = ('home', 'CityDetailView', 'CityCreateView', 'CityUpdateView'
+__all__ = ('home', 'CityDetailView', 'CityCreateView', 'CityUpdateView', 'CityDeleteView'
            )
 
 
@@ -39,9 +39,17 @@ class CityCreateView(CreateView):
     success_url = reverse_lazy('cities:home')
 
 
-
 class CityUpdateView(UpdateView):
     model = City
     form_class = CityForm
     template_name = 'cities/update.html'
     success_url = reverse_lazy('cities:home')
+
+
+class CityDeleteView(DeleteView):
+    model = City
+    template_name = 'cities/delete.html'
+    success_url = reverse_lazy('cities:home')
+
+    def get(self, request, *args, **kwargs):
+        return self.post(request, *args, **kwargs)
